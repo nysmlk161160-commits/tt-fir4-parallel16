@@ -1,42 +1,34 @@
-![](../../workflows/gds/badge.svg) ![](../../workflows/docs/badge.svg) ![](../../workflows/test/badge.svg) ![](../../workflows/fpga/badge.svg)
+# Parallel 4-tap 16-bit FIR — Tiny Tapeout SKY130 overlay
 
-# Tiny Tapeout Verilog Project Template
+This zip is a **complete set of replacement/new files** for the official `TinyTapeout/ttsky-verilog-template` repository. It is not the full original template (which contains official GitHub workflows and default physical config).
 
-- [Read the documentation for project](docs/info.md)
+## Create your new repo
 
-## What is Tiny Tapeout?
+1. Open https://github.com/TinyTapeout/ttsky-verilog-template and choose **Use this template → Create a new repository**. Choose e.g. `tt-fir4-parallel16`.
+2. In your new repo, upload/replace files from this package, preserving directory names:
+   - `src/project.v` REPLACE
+   - `src/fir_4tap.v` ADD
+   - `info.yaml` REPLACE
+   - `test/Makefile`, `test/tb.v`, `test/test.py` REPLACE
+   - `docs/info.md` REPLACE
+   - `README.md` optionally REPLACE
+3. Keep the official `.github/workflows/*`, `src/config.json` and all other template files unchanged initially.
+4. Commit the changes and open GitHub **Actions**. The template's `test` and `gds` workflows are triggered by the push. Look for `gds` → `Build GDS` / `Precheck` / `GL test` and the generated artifact/results viewer.
+5. If the design fails floorplanning / placement / routing because of area, that's an actual result. Do not claim a GDS was created. Consider 1x2 tiles for a diagnostic (only if your coursework allows it), or compare smaller architecture variants to stay in 1x1.
 
-Tiny Tapeout is an educational project that aims to make it easier and cheaper than ever to get your digital and analog designs manufactured on a real chip.
+## Local RTL simulation
 
-To learn more and get started, visit https://tinytapeout.com.
+With Icarus Verilog and Cocotb installed:
 
-## Set up your Verilog project
+```bash
+cd test
+make -B
+```
 
-1. Add your Verilog files to the `src` folder.
-2. Edit the [info.yaml](info.yaml) and update information about your project, paying special attention to the `source_files` and `top_module` properties. If you are upgrading an existing Tiny Tapeout project, check out our [online info.yaml migration tool](https://tinytapeout.github.io/tt-yaml-upgrade-tool/).
-3. Edit [docs/info.md](docs/info.md) and add a description of your project.
-4. Adapt the testbench to your design. See [test/README.md](test/README.md) for more information.
+## First meaningful experiment
 
-The GitHub action will automatically build the ASIC files using [LibreLane](https://www.zerotoasiccourse.com/terminology/librelane/).
+Compare this parallel 4x16x16 FIR against one-multiplier four-cycle FIR at the **same data width, coefficients, numerical behaviour and physical constraints**. Measure post-route area, clock, latency, throughput, DRC and LVS.
 
-## Enable GitHub actions to build the results page
+## Important
 
-- [Enabling GitHub Pages](https://tinytapeout.com/faq/#my-github-action-is-failing-on-the-pages-part)
-
-## Resources
-
-- [FAQ](https://tinytapeout.com/faq/)
-- [Digital design lessons](https://tinytapeout.com/digital_design/)
-- [Learn how semiconductors work](https://tinytapeout.com/siliwiz/)
-- [Join the community](https://tinytapeout.com/discord)
-- [Build your design locally](https://www.tinytapeout.com/guides/local-hardening/)
-
-## What next?
-
-- [Submit your design to the next shuttle](https://app.tinytapeout.com/).
-- Edit [this README](README.md) and explain your design, how it works, and how to test it.
-- Share your project on your social network of choice:
-  - LinkedIn [#tinytapeout](https://www.linkedin.com/search/results/content/?keywords=%23tinytapeout) [@TinyTapeout](https://www.linkedin.com/company/100708654/)
-  - Mastodon [#tinytapeout](https://chaos.social/tags/tinytapeout) [@matthewvenn](https://chaos.social/@matthewvenn)
-  - X (formerly Twitter) [#tinytapeout](https://twitter.com/hashtag/tinytapeout) [@tinytapeout](https://twitter.com/tinytapeout)
-  - Bluesky [@tinytapeout.com](https://bsky.app/profile/tinytapeout.com)
+No repository has been created in your GitHub account; the zip is for you to upload. No silicon implementation or GDS success has yet been verified in this environment.

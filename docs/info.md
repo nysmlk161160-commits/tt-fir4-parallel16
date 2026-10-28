@@ -1,20 +1,23 @@
-<!---
+# 4-tap 16-bit parallel FIR
 
-This file is used to generate your project datasheet. Please fill in the information below and delete any unused
-sections.
+Four signed 16x16 combinational multipliers, a 34-bit sum and a registered 16-bit output. Coefficients are programmable signed Q1.15, samples are signed 16-bit integers. The output truncates/wraps to 16 bits after arithmetic right shift by 15; no rounding or saturation.
 
-You can also include images in this folder and reference them in the markdown. Each image must be less than
-512 kb in size, and the combined size of all images must be less than 1 MB.
--->
+The FIR result for x[n] uses x[n], x[n-1], x[n-2], and x[n-3]. Output is registered on the accepted sample high-byte command.
 
-## How it works
+## Pin protocol
 
-Explain how your project works
+`ui_in[7:0]` carries an 8-bit payload. `uio_in[7]` is a synchronous rising-edge command strobe: drive 0 for at least one clock between strobe pulses. `uio_in[2:0]` selects the command:
 
-## How to test
+- `0`: latch sample low byte
+- `1`: commit sample high byte; generate output
+- `2`: select coefficient index 0..3
+- `3`: latch coefficient low byte
+- `4`: commit coefficient high byte
 
-Explain how to use your project
+`uio_in[3]` selects the output byte (0 low, 1 high) through `uo_out[7:0]`. `uio_out[0]` is a one-clock `out_valid` pulse. All other `uio_out` pins are outputs driven zero only when enabled; `uio_oe=8'h01` means only bit 0 is configured as output and remaining pins are inputs.
 
-## External hardware
+Reset clears samples, coefficients, and output. Program coefficients before sending samples. Coefficient updates affect subsequent samples.
 
-List external hardware used in your project (e.g. PMOD, LED display, etc), if any
+## Constraints
+
+This is a course-scale parallel-FIR experiment, not a guaranteed 1x1-tile fit. Actual area, PPA, DRC, LVS and GDS success require the official Tiny Tapeout build.
